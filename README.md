@@ -5,7 +5,11 @@
 ### 1. Start Services
 
 Create a copy of `.env.demo` file named `.env` with your environment parameters (it works with the default).
+```shell
+cp .env.demo .env
+```
 
+Start services
 ```shell
 dccd up -d
 ```
