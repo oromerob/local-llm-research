@@ -3,6 +3,9 @@
 ## Basic Ollama & web UI
 
 ### 1. Start Services
+
+Create a copy of `.env.demo` file named `.env` with your environment parameters (it works with the default).
+
 ```shell
 dccd up -d
 ```
