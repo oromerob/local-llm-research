@@ -1,0 +1,44 @@
+# credits to https://github.com/valiantlynx/ollama-docker
+services:
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - ${OLLAMA_PORT}:11434
+    volumes:
+      - .:/code
+      - ./ollama/ollama:/root/.ollama
+    container_name: ollama
+    pull_policy: always
+    tty: true
+    restart: always
+    environment:
+      - OLLAMA_KEEP_ALIVE=${OLLAMA_KEEP_ALIVE}
+      - OLLAMA_HOST=${OLLAMA_HOST}
+    networks:
+      - local-llm-research
+
+  ollama-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: ollama-webui
+    volumes:
+      - ./ollama/ollama-webui:/app/backend/data
+    depends_on:
+      - ollama
+    ports:
+      - ${WEBUI_PORT}:8080
+    environment: # https://docs.openwebui.com/getting-started/env-configuration#default_models
+      - OLLAMA_BASE_URLS=${OLLAMA_BASE_URLS}
+      - ENV=${ENV}
+      - WEBUI_AUTH=${WEBUI_AUTH}
+      - WEBUI_NAME=${WEBUI_NAME}
+      - WEBUI_URL=${WEBUI_URL}
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    restart: unless-stopped
+    networks:
+      - local-llm-research
+
+networks:
+  local-llm-research:
+    external: false
